@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات برنامه | XH Store</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" />
+    <link rel="icon" href="Screenshot 2026-11-11 125351.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Vazirmatn', 'sans-serif'] } } } }
+    </script>
+    <style>
+        body { background-color: #070913; color: #f8fafc; overflow-x: hidden; margin: 0; font-family: 'Vazirmatn', sans-serif;}
+        
+        /* Glassmorphism Panels */
+        .glass-panel { background: rgba(15, 20, 42, 0.65); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5); transition: 0.3s;}
+        .glass-panel:hover { border-color: rgba(99, 102, 241, 0.4); }
+        
+        /* Custom Scrollbar for Gallery */
+        .custom-gallery::-webkit-scrollbar { height: 8px; }
+        .custom-gallery::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.03); border-radius: 10px; }
+        .custom-gallery::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.6); border-radius: 10px; }
+        
+        /* Background Effects */
+        .aurora-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;}
+        .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; animation: floatGlow 15s ease-in-out infinite alternate; }
+        .blob-1 { width: 400px; height: 400px; background: #6366f1; top: -10%; left: -10%; }
+        .blob-2 { width: 500px; height: 500px; background: #d946ef; bottom: -10%; right: -10%; animation-delay: -5s;}
+        .blob-3 { width: 300px; height: 300px; background: #06b6d4; top: 40%; left: 40%; animation-delay: -2s;}
+        @keyframes floatGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
+        
+        .cyber-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; z-index: -1; pointer-events: none; }
+    </style>
+</head>
+<body class="relative min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+    <div class="aurora-bg"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+    <div class="cyber-grid"></div>
+
+    <header class="sticky top-0 z-50 px-4 py-4 sm:px-6">
+        <div class="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-white/10 bg-slate-900/60 px-5 py-3 shadow-xl backdrop-blur-2xl">
+            <a href="index.html" class="flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-sm font-bold text-slate-200 transition hover:bg-indigo-600 hover:text-white">
+                <i class="fa-solid fa-arrow-right"></i> استور
+            </a>
+            <div class="text-xl font-extrabold bg-gradient-to-r from-white via-indigo-200 to-pink-400 bg-clip-text text-transparent tracking-widest">XH Store</div>
+        </div>
+    </header>
+
+    <main id="appRender" class="flex-1 pb-24"></main>
+
+    <script src="db.js"></script>
+    <script>
+        function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appId = urlParams.get('id');
+            const app = appsData.find(a => a.id === appId);
+            const renderDiv = document.getElementById('appRender');
+
+            if (!app) {
+                renderDiv.innerHTML = `<div class="mx-auto mt-32 max-w-md text-center glass-panel p-10 rounded-3xl"><i class="fa-solid fa-circle-exclamation text-5xl text-red-500 mb-4"></i><h2 class="text-2xl font-bold">برنامه یافت نشد!</h2></div>`;
+                return;
+            }
+
+            // Media Gallery Generation (Video + Images)
+            let mediaHTML = '';
+            if(app.video && app.video.trim() !== '') {
+                mediaHTML += `
+                    <div class="flex-shrink-0 relative rounded-2xl overflow-hidden border border-indigo-500/50 shadow-lg shadow-indigo-500/20 group">
+                        <video controls class="h-64 sm:h-80 w-auto object-cover max-w-full" poster="${app.icon}">
+                            <source src="${app.video}" type="video/mp4">
+                        </video>
+                        <div class="absolute top-2 right-2 bg-indigo-600/90 backdrop-blur text-white text-xs px-2 py-1 rounded-lg font-bold shadow-lg"><i class="fa-solid fa-play"></i> تریلر اصلی</div>
+                    </div>`;
+            }
+            if(app.screenshots) {
+                mediaHTML += app.screenshots.map(s => `
+                    <div class="flex-shrink-0 rounded-2xl border border-white/10 overflow-hidden shadow-lg transition hover:scale-105 hover:border-indigo-500/50 cursor-pointer">
+                        <img src="${s}" class="h-64 sm:h-80 w-auto object-cover max-w-full">
+                    </div>`).join('');
+            }
+
+            let badgeHTML = app.badge ? `<span class="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-bold mb-2"><i class="fa-solid fa-bolt"></i> ${app.badge}</span>` : '';
+
+            renderDiv.innerHTML = `
+                <!-- Parallax Hero -->
+                <div class="relative h-[350px] sm:h-[450px] w-full overflow-hidden">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105" style="background-image: url('${app.headerImage || app.icon}'); filter: brightness(0.4) saturate(1.2);"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-[#070913]"></div>
+                </div>
+
+                <!-- Main Layout -->
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-40 relative z-20">
+                    
+                    <!-- Header Card -->
+                    <div class="glass-panel rounded-3xl p-6 sm:p-10 mb-8 flex flex-col md:flex-row items-center md:items-start gap-8 text-center md:text-right relative overflow-hidden">
+                        <div class="absolute -top-px left-12 right-12 h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
+                        
+                        <div class="relative group">
+                            <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-indigo-600 to-pink-500 opacity-60 blur-lg transition duration-500 group-hover:opacity-100"></div>
+                            <img src="${app.icon}" class="relative h-36 w-36 sm:h-40 sm:w-40 rounded-3xl object-cover border-2 border-white/20 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                        
+                        <div class="flex-1 space-y-2 mt-2 md:mt-0">
+                            ${badgeHTML}
+                            <h1 class="text-3xl sm:text-5xl font-black text-white drop-shadow-lg">${app.name}</h1>
+                            <div class="flex items-center justify-center md:justify-start gap-2 text-indigo-400 font-medium text-sm mt-2">
+                                <i class="fa-solid fa-circle-check"></i> توسعه‌دهنده: ${app.developer}
+                            </div>
+                            
+                            <div class="flex flex-wrap justify-center md:justify-start gap-3 mt-4 pt-2">
+                                <span class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-slate-300 font-bold"><i class="fa-solid fa-layer-group text-pink-400"></i> ${app.category}</span>
+                                <span class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-slate-300 font-bold"><i class="fa-solid fa-hard-drive text-emerald-400"></i> حجم: ${app.size}</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="w-full md:w-auto mt-4 md:mt-0 flex flex-col gap-3 min-w-[220px]">
+                            <button id="downloadBtn" onclick="startDownload('${app.link}')" class="relative group overflow-hidden w-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-pink-600 text-white font-extrabold py-4 px-8 rounded-2xl shadow-xl shadow-indigo-600/40 transition hover:scale-[1.03]">
+                                <span class="relative z-10 flex items-center justify-center gap-2 text-lg"><i class="fa-solid fa-cloud-arrow-down text-xl"></i> دریافت و نصب</span>
+                            </button>
+                            <div class="text-center text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 py-2 rounded-xl"><i class="fa-solid fa-shield-virus"></i> بدون بدافزار / تایید شده</div>
+                        </div>
+                    </div>
+
+                    <!-- Bento Grid Content -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Col 1 & 2: Gallery & Description -->
+                        <div class="lg:col-span-2 space-y-8">
+                            
+                            <!-- Gallery -->
+                            <div class="glass-panel rounded-3xl p-6 sm:p-8">
+                                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <div class="bg-indigo-500/20 p-2 rounded-lg text-indigo-400 border border-indigo-500/20"><i class="fa-solid fa-images"></i></div>
+                                    محیط برنامه
+                                </h2>
+                                <div class="custom-gallery flex gap-4 overflow-x-auto pb-4 snap-x">
+                                    ${mediaHTML || '<p class="text-slate-400">فایلی موجود نیست.</p>'}
+                                </div>
+                            </div>
+
+                            <!-- Full Description -->
+                            <div class="glass-panel rounded-3xl p-6 sm:p-8">
+                                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <div class="bg-pink-500/20 p-2 rounded-lg text-pink-400 border border-pink-500/20"><i class="fa-solid fa-align-right"></i></div>
+                                    درباره این نرم‌افزار
+                                </h2>
+                                <div class="text-slate-300 leading-loose text-base md:text-lg text-justify font-light space-y-4">
+                                    ${app.desc.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Col 3: Specs & Guide Sidebar -->
+                        <div class="space-y-8">
+                            
+                            <!-- System Requirements Card -->
+                            <div class="glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+                                <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-cyan-500/10 blur-2xl"></div>
+                                <h3 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                                    <i class="fa-solid fa-microchip text-cyan-400"></i> مشخصات مورد نیاز
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-loose bg-slate-900/50 p-4 rounded-xl border border-white/5 font-mono">
+                                    ${(app.requirements && app.requirements.trim() !== '') ? app.requirements.replace(/\n/g, '<br>') : 'مشخصاتی برای این برنامه ثبت نشده است. معمولاً روی اکثر سیستم‌ها اجرا می‌شود.'}
+                                </div>
+                            </div>
+
+                            <!-- Installation Guide Card -->
+                            <div class="glass-panel rounded-3xl p-6 sm:p-8 border-amber-500/20 relative overflow-hidden">
+                                <div class="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-amber-500/10 blur-2xl"></div>
+                                <h3 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                                    <i class="fa-solid fa-book-open text-amber-400"></i> راهنمای نصب و استفاده
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-loose bg-amber-950/20 p-4 rounded-xl border border-amber-500/10 text-justify">
+                                    ${(app.guide && app.guide.trim() !== '') ? app.guide.replace(/\n/g, '<br>') : '۱. فایل را دانلود کنید.<br>۲. آن را از حالت فشرده خارج کنید (در صورت نیاز).<br>۳. فایل نصبی را اجرا کرده و مراحل را طی کنید.'}
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        function startDownload(link) {
+            const btn = document.getElementById('downloadBtn');
+            btn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2 text-lg"><i class="fa-solid fa-circle-notch animate-spin"></i> پردازش سرور...</span>`;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            setTimeout(() => {
+                btn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2 text-lg"><i class="fa-solid fa-check"></i> دانلود شروع شد</span>`;
+                btn.classList.replace('from-indigo-600', 'from-emerald-600');
+                btn.classList.replace('via-indigo-500', 'via-emerald-500');
+                btn.classList.replace('to-pink-600', 'to-teal-600');
+                if(link && link !== "#") window.open(link, '_blank');
+            }, 1500);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
