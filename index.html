@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XH Store | حرفه‌ای‌ترین مارکت اپلیکیشن</title>
+    <link rel="icon" href="Screenshot 2026-11-11 125351.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-base: #060814; --bg-surface: rgba(18, 22, 46, 0.65); --bg-card: rgba(22, 28, 60, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.12); --glass-border-hover: rgba(99, 102, 241, 0.5);
+            --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.35); --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --card-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+        [data-theme="light"] {
+            --bg-base: #f8fafc; --bg-surface: rgba(255, 255, 255, 0.8); --bg-card: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.08); --glass-border-hover: rgba(99, 102, 241, 0.4);
+            --text-main: #0f172a; --text-muted: #64748b; --accent: #4f46e5;
+            --accent-glow: rgba(79, 70, 229, 0.2); --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #db2777 100%);
+        }
+        [data-theme="cyber"] {
+            --bg-base: #050508; --bg-surface: rgba(15, 8, 30, 0.75); --bg-card: rgba(24, 10, 48, 0.55);
+            --glass-border: rgba(0, 255, 204, 0.2); --glass-border-hover: rgba(255, 0, 128, 0.6);
+            --text-main: #00ffcc; --text-muted: #ff77c6; --accent: #ff007f;
+            --accent-glow: rgba(255, 0, 127, 0.45); --accent-gradient: linear-gradient(135deg, #00ffcc 0%, #ff007f 100%);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; overflow-x: hidden; transition: 0.5s ease; }
+        
+        #ambientCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.85; }
+        
+        header { position: sticky; top: 0; z-index: 100; background: var(--bg-surface); backdrop-filter: blur(24px); border-bottom: 1px solid var(--glass-border); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
+        .logo-container { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .logo-badge { width: 44px; height: 44px; border-radius: 14px; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.3rem; box-shadow: 0 8px 20px var(--accent-glow); animation: pulseGlow 4s infinite alternate; }
+        @keyframes pulseGlow { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(1.05) rotate(3deg); } }
+        .logo-text { font-size: 1.4rem; font-weight: 900; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .themes-switch { display: flex; background: rgba(0, 0, 0, 0.2); padding: 4px; border-radius: 30px; border: 1px solid var(--glass-border); }
+        .theme-btn { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .theme-btn:hover { color: var(--text-main); }
+        .theme-btn.active { background: var(--accent-gradient); color: #fff; font-weight: 700; box-shadow: 0 4px 15px var(--accent-glow); }
+        
+        .hero { text-align: center; padding: 60px 20px 40px; max-width: 900px; margin: 0 auto; }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; animation: fadeInDown 0.9s backwards 0.1s; line-height: 1.3;}
+        @media(min-width: 768px) { .hero h1 { font-size: 3.4rem; } header { padding: 18px 48px;} }
+        .hero h1 span { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .search-wrapper { position: relative; max-width: 680px; margin: 0 auto; z-index: 60; animation: fadeInUp 1s backwards 0.3s; }
+        .search-box { width: 100%; padding: 18px 50px 18px 20px; border-radius: 28px; background: var(--bg-surface); border: 1.5px solid var(--glass-border); color: var(--text-main); font-size: 1.1rem; font-family: inherit; backdrop-filter: blur(24px); box-shadow: 0 12px 36px -10px rgba(0,0,0,0.3); transition: 0.35s; }
+        .search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 35px var(--accent-glow); transform: translateY(-2px); }
+        .search-icon { position: absolute; right: 20px; top:50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--accent); }
+        .search-results { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-surface); backdrop-filter: blur(30px); border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 24px 60px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: 0.3s; max-height: 300px; overflow-y: auto; text-align: right; margin-top:10px;}
+        .search-results.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .result-item { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--glass-border); text-decoration: none; color: var(--text-main); transition: 0.25s; }
+        .result-item:hover { background: rgba(255, 255, 255, 0.08); padding-right: 25px; }
+        .result-item img { width: 50px; height: 50px; border-radius: 12px; margin-left: 15px; object-fit: cover;}
+        
+        .categories-nav { display: flex; justify-content: center; gap: 12px; margin-top: 25px; flex-wrap: wrap; animation: fadeInUp 1s backwards 0.4s; }
+        .cat-chip { padding: 10px 25px; background: var(--bg-card); border: 1px solid var(--glass-border); color: var(--text-muted); border-radius: 20px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.3s; backdrop-filter: blur(10px); }
+        .cat-chip:hover { color: var(--text-main); border-color: var(--accent); transform: translateY(-2px); }
+        .cat-chip.active { background: var(--accent); border-color: var(--accent); color: #ffffff; box-shadow: 0 4px 16px var(--accent-glow); }
+
+        .container { max-width: 1360px; margin: 20px auto 100px; padding: 0 20px; }
+        .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+        .section-indicator { width: 6px; height: 34px; border-radius: 6px; background: var(--accent-gradient); }
+        .section-title { font-size: 1.8rem; font-weight: 800; }
+        
+        .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; perspective: 1200px; }
+        .app-card-wrapper { position: relative; perspective: 1000px; display: block; text-decoration: none;}
+        .app-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 25px 20px; text-decoration: none; color: var(--text-main); box-shadow: var(--card-shadow); display: flex; flex-direction: column; align-items: center; text-align: center; transform-style: preserve-3d; transition: 0.4s; }
+        .app-card:hover { border-color: var(--glass-border-hover); box-shadow: 0 24px 50px -10px rgba(0,0,0,0.6), 0 0 30px var(--accent-glow); transform: translateY(-10px) scale(1.02); }
+        
+        .icon-container { position: relative; margin-bottom: 15px; transform: translateZ(35px); transition: 0.4s; }
+        .app-card:hover .icon-container { transform: translateZ(55px) scale(1.08); }
+        .app-icon-img { width: 100px; height: 100px; border-radius: 26px; object-fit: cover; box-shadow: 0 14px 28px rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.1);}
+        
+        .app-badge-featured { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); color: #fbbf24; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .app-cat-tag { font-size: 0.8rem; color: var(--accent); background: rgba(99,102,241,0.1); padding: 4px 12px; border-radius: 16px; margin-bottom: 10px; }
+        .app-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+        .app-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .app-footer { width: 100%; display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid var(--glass-border); margin-top: auto; }
+        .app-size { color: var(--text-muted); font-size: 0.95rem; font-weight: bold; }
+        .install-btn { background: var(--accent-gradient); border: none; color: #fff; padding: 8px 15px; border-radius: 14px; font-weight: bold; box-shadow: 0 4px 12px var(--accent-glow); transition: 0.25s; cursor: pointer;}
+        .install-btn:hover { transform: scale(1.05); }
+
+        .no-results { text-align: center; padding: 50px 20px; color: var(--text-muted); grid-column: 1 / -1; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <canvas id="ambientCanvas"></canvas>
+
+    <header>
+        <a href="#" class="logo-container">
+            <div class="logo-badge"><i class="fa-solid fa-shapes"></i></div>
+            <div class="logo-text">XH Store</div>
+        </a>
+        <div class="themes-switch">
+            <button class="theme-btn active" onclick="setTheme('dark', this)"><i class="fa-solid fa-moon"></i> تاریک</button>
+            <button class="theme-btn" onclick="setTheme('light', this)"><i class="fa-solid fa-sun"></i> روشن</button>
+            <button class="theme-btn" onclick="setTheme('cyber', this)"><i class="fa-solid fa-bolt"></i> نئون</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>دنیایی از <span>بهترین و مدرن‌ترین</span> اپلیکیشن‌ها</h1>
+        
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-box" placeholder="جستجوی عنوان یا دسته‌بندی (مثلاً برنامه یا بازی)..." autocomplete="off">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="categories-nav">
+            <button class="cat-chip active" onclick="filterCategory('all', this)">همه</button>
+            <button class="cat-chip" onclick="filterCategory('برنامه', this)">برنامه‌ها</button>
+            <button class="cat-chip" onclick="filterCategory('بازی', this)">بازی‌ها</button>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="section-header">
+            <div class="section-indicator"></div>
+            <h2 class="section-title">تازه‌های فروشگاه</h2>
+        </div>
+        <div class="apps-grid" id="appsGrid"></div>
+    </main>
+
+    <script src="db.js"></script>
+    <script>
+        function setTheme(theme, btn) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+        }
+
+        const grid = document.getElementById('appsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        function renderApps(apps) {
+            grid.innerHTML = '';
+            if (!apps || apps.length === 0) {
+                grid.innerHTML = `<div class="no-results"><i class="fa-solid fa-box-open fa-3x" style="color:var(--accent); margin-bottom:15px; opacity:0.5;"></i><h3>موردی یافت نشد!</h3></div>`;
+                return;
+            }
+
+            apps.forEach((app, index) => {
+                const cardWrap = document.createElement('a');
+                cardWrap.href = `details.html?id=${app.id}`;
+                cardWrap.className = 'app-card-wrapper';
+                cardWrap.style.animation = `fadeInUp 0.6s backwards ${index * 0.08}s`;
+
+                // اگر برچسب نداشت، کلا مخفی بشه
+                let badgeHTML = '';
+                if(app.badge && app.badge.trim() !== '') {
+                    badgeHTML = `<div class="app-badge-featured"><i class="fa-solid fa-bolt"></i> ${app.badge}</div>`;
+                }
+
+                cardWrap.innerHTML = `
+                    <div class="app-card">
+                        ${badgeHTML}
+                        <div class="icon-container"><img src="${app.icon}" class="app-icon-img" alt="${app.name}"></div>
+                        <span class="app-cat-tag">${app.category}</span>
+                        <h3 class="app-title">${app.name}</h3>
+                        <p class="app-desc">${app.shortDesc}</p>
+                        <div class="app-footer">
+                            <div class="app-size"><i class="fa-solid fa-hard-drive text-indigo-400"></i> ${app.size}</div>
+                            <button class="install-btn">نصب</button>
+                        </div>
+                    </div>`;
+                grid.appendChild(cardWrap);
+            });
+        }
+        
+        renderApps(appsData);
+
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            
+            // اگه دسته مثلا "برنامه" باشه، شامل کلماتی مثل "برنامه‌ها" یا "برنامه" هم میشه
+            const filtered = cat === 'all' ? appsData : appsData.filter(a => a.category.includes(cat));
+            renderApps(filtered);
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (!val) { searchResults.classList.remove('active'); return; }
+            const regex = new RegExp(`(${val})`, "gi");
+            // حالا سرچ علاوه بر اسم، خود دسته بندی رو هم میگرده
+            const filtered = (appsData||[]).filter(app => app.name.match(regex) || app.category.match(regex) || app.shortDesc.match(regex));
+
+            if (filtered.length > 0) {
+                searchResults.innerHTML = filtered.map(app => `
+                    <a href="details.html?id=${app.id}" class="result-item">
+                        <img src="${app.icon}" alt="icon">
+                        <div>
+                            <div style="font-weight:bold; font-size:1rem;">${app.name.replace(regex, "<mark>$1</mark>")}</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted);">${app.category.replace(regex, "<mark>$1</mark>")}</div>
+                        </div>
+                    </a>`).join('');
+            } else {
+                searchResults.innerHTML = `<div style="padding: 15px; text-align: center; color: var(--text-muted);">نتیجه‌ای یافت نشد.</div>`;
+            }
+            searchResults.classList.add('active');
+        });
+
+        document.addEventListener('click', (e) => { if(!e.target.closest('.search-wrapper')) searchResults.classList.remove('active'); });
+
+        const canvas = document.getElementById('ambientCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); });
+        
+        const particles = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1; this.vx = (Math.random() - 0.5) * 0.7; this.vy = (Math.random() - 0.5) * 0.7;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1; if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = 'rgba(99, 102, 241, 0.5)'; ctx.fill(); }
+        }
+        function initParticles() { particles.length = 0; for (let i = 0; i < 40; i++) particles.push(new Particle()); }
+        initParticles();
+
+        function renderAmbient() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y; const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(147, 130, 255, ${0.2 * (1 - dist / 120)})`; ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(renderAmbient);
+        }
+        renderAmbient();
+    </script>
+</body>
+</html>
